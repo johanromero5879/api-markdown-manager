@@ -1,0 +1,8 @@
+# Dist
+dist
+
+# Dependecies
+node_modules
+
+# Environment
+.env
