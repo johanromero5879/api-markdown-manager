@@ -1,7 +1,8 @@
 import {Role} from "./Role";
 
 export interface RoleRepository {
-    getById(id: string): Promise<Role>
-    getByName(name: string): Promise<Role>
+    findById(id: string): Promise<Role>
+    findByName(name: string): Promise<Role>
+    findAll(): Promise<Role[]>
     insert(role: Role): Promise<Role>
 }

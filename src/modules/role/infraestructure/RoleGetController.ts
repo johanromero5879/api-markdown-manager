@@ -9,9 +9,17 @@ export class RoleGetController {
 
     async find(req: Request, res: Response, next) {
         try{
-            const name = req.params.name.replace(/-/g, ' ')
-            const role = await this.roleFinder.findByName(name)
+            const role = await this.roleFinder.findById(req.params.id)
             res.json(role)
+        }catch (error) {
+            next(error)
+        }
+    }
+
+    async findAll(req: Request, res: Response, next) {
+        try {
+            const roles = await this.roleFinder.findAll()
+            res.json(roles)
         }catch (error) {
             next(error)
         }

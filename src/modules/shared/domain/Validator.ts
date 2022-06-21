@@ -2,7 +2,7 @@ import Schema from 'validate'
 import {injectable} from "inversify";
 
 @injectable()
-export default class Validator {
+export default abstract class Validator {
     protected validator: Schema
 
     validate(obj) {

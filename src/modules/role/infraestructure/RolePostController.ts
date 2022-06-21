@@ -11,7 +11,7 @@ export class RolePostController {
     async create(req: Request, res: Response, next) {
         try {
             const newType = await this.roleCreator.create(req.body)
-            res.json(newType)
+            res.status(201).json(newType)
         }catch(error) {
             next(error)
         }

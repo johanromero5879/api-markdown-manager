@@ -1,22 +1,26 @@
 import {injectable} from "inversify";
 
-
 import MongoRepository from "../../shared/infraestructure/MongoRepository";
 import {RoleRepository} from "../domain/RoleRepository";
 import {Role} from "../domain/Role";
 import BadRequestError from "../../../errors/BadRequestError";
+import {ObjectId} from "mongodb";
 
 @injectable()
 export class MongoRoleRepository extends MongoRepository implements RoleRepository {
 
-    async getById(id: string): Promise<Role> {
+    async findById(id: string): Promise<Role> {
         this.validateID(id)
-        return await this.collection().findOne({ _id: id }) as Role
+        return await this.collection().findOne({ _id: new ObjectId(id) }) as Role
     }
 
-    async getByName(name: string): Promise<Role> {
+    async findByName(name: string): Promise<Role> {
         const query = { name: { $regex: new RegExp(name, 'i') } }
         return await this.collection().findOne(query) as Role
+    }
+
+    async findAll(): Promise<Role[]> {
+        return await this.collection().find().toArray() as Role[]
     }
 
     async insert(role: Role): Promise<Role> {
@@ -38,7 +42,6 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
     }
 
     protected moduleName(): string {
-        return "roles"
+        return 'roles'
     }
-
 }

@@ -18,7 +18,7 @@ export default abstract class MongoRepository {
 
     protected validateID(id: string) {
         if(!ObjectId.isValid(id)) {
-            throw new BadRequestError('ID is not valid')
+            throw new BadRequestError(`ID ${id} is not valid`)
         }
     }
 }
