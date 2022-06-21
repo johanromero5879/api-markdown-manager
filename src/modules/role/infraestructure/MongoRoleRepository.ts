@@ -20,7 +20,7 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
     }
 
     async findAll(): Promise<Role[]> {
-        return await this.collection().find().toArray() as Role[]
+        return await this.collection().find().sort('name').toArray() as Role[]
     }
 
     async insert(role: Role): Promise<Role> {
