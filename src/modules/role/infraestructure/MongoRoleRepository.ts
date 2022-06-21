@@ -29,14 +29,24 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
         return role
     }
 
-    async validateNameDuplicated(name: string) {
+    async update(id: string, role: Role): Promise<Role> {
+        await this.validateID(id)
+        await this.validateNameDuplicated(role.name, id)
+
+        const rolUpdated = (await this.collection()
+            .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: role }, { returnDocument: 'after' })).value as Role
+
+        return rolUpdated
+    }
+
+    async validateNameDuplicated(name: string, id = null) {
         const query = {
             name: { $regex: new RegExp(name, 'i') }
         }
 
         const role = await this.collection().findOne(query) as Role
 
-        if(role) {
+        if(role && role._id != id) {
             throw new BadRequestError(`Role ${name.toLowerCase()} already exists`)
         }
     }

@@ -9,7 +9,7 @@ export class RolePutController {
 
     async update(req: Request, res: Response, next) {
         try {
-            const role = await this.roleUpdater.update(req.body)
+            const role = await this.roleUpdater.update(req.params.id, req.body)
             res.json(role)
         }catch(error) {
             next(error)

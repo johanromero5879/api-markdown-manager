@@ -5,4 +5,5 @@ export interface RoleRepository {
     findByName(name: string): Promise<Role>
     findAll(): Promise<Role[]>
     insert(role: Role): Promise<Role>
+    update(id: string, role: Role): Promise<Role>
 }

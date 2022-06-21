@@ -10,6 +10,10 @@ export default abstract class Validator {
     }
 
     getMessageError(obj) {
-        return this.validate(obj).toString().replace(/,/g, '\r\n')
+        const errors = this.validate(obj)
+        if(errors) {
+            return errors.toString().replace(/,/g, '\r\n')
+        }
+        return null
     }
 }

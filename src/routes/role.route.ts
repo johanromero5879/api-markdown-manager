@@ -23,7 +23,7 @@ export const register = (router: Router) => {
         .get((req: Request, res:Response, next) => {
             getController.find(req, res, next)
         })
-        .put((req: Request, res: Response, next) => {
+        .patch((req: Request, res: Response, next) => {
             putController.update(req, res, next)
         })
 }

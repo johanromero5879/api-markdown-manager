@@ -20,3 +20,11 @@ export class RoleValidator extends Validator {
         })
     }
 }
+
+@injectable()
+export class RoleUpdatedValidator extends RoleValidator {
+    constructor() {
+        super()
+        this.validator.path('name').required(false)
+    }
+}

@@ -2,15 +2,19 @@ import {inject, injectable} from "inversify";
 import {RoleRepository} from "../domain/RoleRepository";
 import {TYPES} from "../../../dependency-injection/types";
 import {Role} from "../domain/Role";
-import {RoleValidator} from "../domain/RoleValidator";
+import Validator from "../../shared/domain/Validator";
+import BadRequestError from "../../../errors/BadRequestError";
 
 @injectable()
 export class RoleUpdater {
     @inject(TYPES.RoleRepository) private repository: RoleRepository
-    @inject(TYPES.RoleValidator) private validator: RoleValidator
+    @inject(TYPES.RoleUpdatedValidator) private validator: Validator
 
-    async update(role: Role) {
-
-        return role
+    async update(id: string, role: Role) {
+        const errors = this.validator.getMessageError(role)
+        if(errors) {
+            throw new BadRequestError(errors)
+        }
+        return await this.repository.update(id, role)
     }
 }
