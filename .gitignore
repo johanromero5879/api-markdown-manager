@@ -3,6 +3,7 @@ dist
 
 # Dependecies
 node_modules
+.idea
 
 # Environment
 .env

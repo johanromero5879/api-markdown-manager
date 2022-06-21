@@ -1,5 +1,5 @@
 {
-  "name": "markdown-manager",
+  "name": "api-markdown-manager",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "inversify": "^6.0.1",
+    "mongodb": "^4.7.0",
+    "reflect-metadata": "^0.1.13",
+    "validate": "^5.2.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
