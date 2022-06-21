@@ -12,6 +12,8 @@ import {RolePostController} from "../modules/role/infraestructure/RolePostContro
 import Validator from "../modules/shared/domain/Validator";
 import {RoleValidator} from "../modules/role/domain/RoleValidator";
 import {MongoRoleRepository} from "../modules/role/infraestructure/MongoRoleRepository";
+import {RoleGetController} from "../modules/role/infraestructure/RoleGetController";
+import {RoleFinder} from "../modules/role/application/RoleFinder";
 
 const container = new Container()
 
@@ -20,5 +22,7 @@ container.bind<RoleRepository>(TYPES.RoleRepository).to(MongoRoleRepository)
 container.bind<RoleCreator>(TYPES.RoleCreator).to(RoleCreator)
 container.bind<RolePostController>(TYPES.RolePostController).to(RolePostController)
 container.bind<Validator>(TYPES.RoleValidator).to(RoleValidator)
+container.bind<RoleGetController>(TYPES.RoleGetController).to(RoleGetController)
+container.bind<RoleFinder>(TYPES.RoleFinder).to(RoleFinder)
 
 export { container }
