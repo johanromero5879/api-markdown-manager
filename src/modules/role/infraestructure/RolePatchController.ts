@@ -4,7 +4,7 @@ import {TYPES} from "../../../dependency-injection/types";
 import {RoleUpdater} from "../application/RoleUpdater";
 
 @injectable()
-export class RolePutController {
+export class RolePatchController {
     @inject(TYPES.RoleUpdater) private roleUpdater: RoleUpdater
 
     async update(req: Request, res: Response, next) {

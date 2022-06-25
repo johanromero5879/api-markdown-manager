@@ -39,6 +39,10 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
         return rolUpdated
     }
 
+    async existsById(id: string): Promise<boolean> {
+        return !!(await this.findById(id));
+    }
+
     async validateNameDuplicated(name: string, id = null) {
         const query = {
             name: { $regex: new RegExp(name, 'i') }
@@ -54,4 +58,5 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
     protected moduleName(): string {
         return 'roles'
     }
+
 }

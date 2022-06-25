@@ -3,7 +3,10 @@ dist
 
 # Dependecies
 node_modules
-.idea
 
 # Environment
 .env
+
+# Editors
+.idea
+.vscode

@@ -1,9 +1,8 @@
-import UserType from "../../usertype/domain/UserType"
-
-export default interface User {
+export interface User {
+    _id?: any,
     username: string,
     password: string,
-    full_name: string,
+    fullname: string,
     last_login?: Date,
-    role: UserType
+    role: any
 }

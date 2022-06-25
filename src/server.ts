@@ -23,7 +23,9 @@ export default class Server {
         this.setupRoutes()
 
         // Middlewares handle errors
-        this.express.use(logErrorMiddleware )
+        if(process.env.NODE_ENV === 'development') {
+            this.express.use(logErrorMiddleware)
+        }
         this.express.use(returnError)
     }
 

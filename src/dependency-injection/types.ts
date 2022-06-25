@@ -1,5 +1,7 @@
+import {UserGetController} from "../modules/user/infraesctucture/UserGetController";
+
 export const TYPES = {
-    // Role
+    // roles
     RoleRepository: Symbol.for('RoleRepository'),
     RoleCreator: Symbol.for('RoleCreator'),
     RolePostController: Symbol.for('RolePostController'),
@@ -7,6 +9,14 @@ export const TYPES = {
     RoleUpdatedValidator: Symbol.for('RoleUpdatedValidator'),
     RoleGetController: Symbol.for('RoleGetController'),
     RoleFinder: Symbol.for('RoleFinder'),
-    RolePutController: Symbol.for('RolePutController'),
-    RoleUpdater: Symbol.for('RoleUpdater')
+    RolePatchController: Symbol.for('RolePatchController'),
+    RoleUpdater: Symbol.for('RoleUpdater'),
+
+    // users
+    UserRepository: Symbol.for('UserRepository'),
+    UserCreator: Symbol.for('UserCreator'),
+    UserPostController: Symbol.for('UserPostController'),
+    UserValidator: Symbol.for('UserValidator'),
+    UserFinder: Symbol.for('UserFinder'),
+    UserGetController: Symbol.for('UserGetController')
 }

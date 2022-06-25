@@ -1,6 +1,6 @@
-import User from "./User";
+import {User} from "./User";
 
-export default interface UserRepository {
-    getById(id: string): Promise<User>;
-    save(user: User): Promise<User>;
+export interface UserRepository {
+    findById(id: string): Promise<User>
+    insert(user: User): Promise<User>
 }
