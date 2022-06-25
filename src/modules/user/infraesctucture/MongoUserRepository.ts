@@ -9,10 +9,22 @@ import BadRequestError from "../../../errors/BadRequestError";
 import {RoleRepository} from "../../role/domain/RoleRepository";
 import NotFoundError from "../../../errors/NotFoundError";
 
-
 @injectable()
 export class MongoUserRepository extends MongoRepository implements UserRepository {
     @inject(TYPES.RoleRepository) private roleRepository: RoleRepository
+
+    async findAll(): Promise<User[]> {
+        return await this.collection().aggregate([
+            { $lookup: {
+                    from: 'roles',
+                    localField: 'role',
+                    foreignField: '_id',
+                    as: 'role'
+                } },
+            { $unwind: '$role' },
+            { $project: { 'password': 0 } },
+        ]).toArray() as User[]
+    }
 
     async findById(id: string): Promise<User> {
         await this.validateID(id)
@@ -60,4 +72,7 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
         return 'users'
     }
 
+    async existsById(id: string): Promise<boolean> {
+        return !!(await this.findById(id))
+    }
 }

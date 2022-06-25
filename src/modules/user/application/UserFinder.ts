@@ -7,6 +7,10 @@ import NotFoundError from "../../../errors/NotFoundError";
 export class UserFinder {
     @inject(TYPES.UserRepository) private repository: UserRepository
 
+    async findAll() {
+        return await this.repository.findAll()
+    }
+
     async findById(id: string) {
         const user = await this.repository.findById(id)
         if(!user) {

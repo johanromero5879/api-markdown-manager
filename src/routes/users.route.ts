@@ -10,6 +10,7 @@ export const register = (router: Router) => {
 
     router.route('/users')
         .post((req: Request, res: Response, next) => postController.create(req, res, next))
+        .get((req: Request, res: Response, next) => getController.findAll(req, res, next))
 
     router.route('/users/:id')
         .get((req: Request, res: Response, next) => getController.findById(req, res, next))
