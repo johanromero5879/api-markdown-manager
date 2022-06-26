@@ -1,6 +1,9 @@
 import {UserGetController} from "../modules/user/infraesctucture/UserGetController";
 
 export const TYPES = {
+    // shared
+    BcryptAdapter: Symbol.for('BcryptAdapter'),
+
     // roles
     RoleRepository: Symbol.for('RoleRepository'),
     RoleCreator: Symbol.for('RoleCreator'),

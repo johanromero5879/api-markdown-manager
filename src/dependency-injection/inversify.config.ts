@@ -23,9 +23,13 @@ import {UserPostController} from "../modules/user/infraesctucture/UserPostContro
 import {UserValidator} from "../modules/user/domain/UserValidator";
 import {UserFinder} from "../modules/user/application/UserFinder";
 import {UserGetController} from "../modules/user/infraesctucture/UserGetController";
+import {BcryptAdapter} from "../modules/shared/application/BcryptAdapter";
 
 
 const container = new Container()
+
+// shared
+container.bind<BcryptAdapter>(TYPES.BcryptAdapter).to(BcryptAdapter)
 
 // roles
 container.bind<RoleRepository>(TYPES.RoleRepository).to(MongoRoleRepository)
