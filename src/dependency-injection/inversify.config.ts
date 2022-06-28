@@ -24,6 +24,7 @@ import {UserValidator} from "../modules/user/domain/UserValidator";
 import {UserFinder} from "../modules/user/application/UserFinder";
 import {UserGetController} from "../modules/user/infraesctucture/UserGetController";
 import {BcryptAdapter} from "../modules/shared/application/BcryptAdapter";
+import {AuthPostController} from "../modules/auth/infraestructure/AuthPostController";
 
 
 const container = new Container()
@@ -49,5 +50,8 @@ container.bind<UserPostController>(TYPES.UserPostController).to(UserPostControll
 container.bind<Validator>(TYPES.UserValidator).to(UserValidator)
 container.bind<UserFinder>(TYPES.UserFinder).to(UserFinder)
 container.bind<UserGetController>(TYPES.UserGetController).to(UserGetController)
+
+// auth
+container.bind<AuthPostController>(TYPES.AuthPostController).to(AuthPostController)
 
 export { container }

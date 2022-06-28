@@ -1,46 +1,47 @@
 import express, {json, Router, Express, Response, Request} from 'express'
 import http from 'http'
 
+import { container } from './dependency-injection/inversify.config'
 import {registerRoutes} from "./routes";
 import {logErrorMiddleware, returnError} from "./errors/error-handler";
 
 export default class Server {
-    private express: Express
+    private app: Express
     private router: Router
     private httpServer: http.Server
 
     constructor(port: string) {
         // Settings
-        this.express = express()
+        this.app = express()
         this.router = Router()
 
-        this.express.set('port', port)
+        this.app.set('port', port)
 
         // Routes
-        this.express.use(json())
-        this.express.use('/api', this.router)
+        this.app.use(json())
+        this.app.use('/api', this.router)
 
         this.setupRoutes()
 
         // Middlewares handle errors
         if(process.env.NODE_ENV === 'development') {
-            this.express.use(logErrorMiddleware)
+            this.app.use(logErrorMiddleware)
         }
-        this.express.use(returnError)
+        this.app.use(returnError)
     }
 
     private setupRoutes() {
-        registerRoutes(this.router)
+        registerRoutes(this.router, container)
 
-        this.express.get('/api', (req: Request, res: Response) => {
+        this.app.get('/api', (req: Request, res: Response) => {
             res.send("Markdown manager API")
         })
 
     }
 
     async listen() {
-        this.httpServer = await this.express.listen(this.express.get('port'))
-        console.log(`Server is running on port ${ this.express.get('port') }`)
+        this.httpServer = await this.app.listen(this.app.get('port'))
+        console.log(`Server is running on port ${ this.app.get('port') }`)
     }
 
     stop() {

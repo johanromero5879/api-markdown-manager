@@ -21,5 +21,8 @@ export const TYPES = {
     UserPostController: Symbol.for('UserPostController'),
     UserValidator: Symbol.for('UserValidator'),
     UserFinder: Symbol.for('UserFinder'),
-    UserGetController: Symbol.for('UserGetController')
+    UserGetController: Symbol.for('UserGetController'),
+
+    // auth
+    AuthPostController: Symbol.for('AuthPostController')
 }
