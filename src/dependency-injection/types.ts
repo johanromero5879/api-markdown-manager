@@ -1,28 +1,31 @@
-import {UserGetController} from "../modules/user/infraesctucture/UserGetController";
+import {ValidatorTokenMiddleware} from "../modules/auth/infrastructure/ValidatorTokenMiddleware";
 
 export const TYPES = {
     // shared
     BcryptAdapter: Symbol.for('BcryptAdapter'),
+    JWTAdapter: Symbol.for('JWTAdapter'),
+    RedisRepository: Symbol.for('RedisRepository'),
 
     // roles
     RoleRepository: Symbol.for('RoleRepository'),
     RoleCreator: Symbol.for('RoleCreator'),
-    RolePostController: Symbol.for('RolePostController'),
     RoleValidator: Symbol.for('RoleValidator'),
     RoleUpdatedValidator: Symbol.for('RoleUpdatedValidator'),
-    RoleGetController: Symbol.for('RoleGetController'),
     RoleFinder: Symbol.for('RoleFinder'),
-    RolePatchController: Symbol.for('RolePatchController'),
     RoleUpdater: Symbol.for('RoleUpdater'),
+    RolesController: Symbol.for('RolesController'),
 
     // users
     UserRepository: Symbol.for('UserRepository'),
     UserCreator: Symbol.for('UserCreator'),
-    UserPostController: Symbol.for('UserPostController'),
     UserValidator: Symbol.for('UserValidator'),
     UserFinder: Symbol.for('UserFinder'),
-    UserGetController: Symbol.for('UserGetController'),
+    UsersController: Symbol.for('UsersController'),
 
     // auth
-    AuthPostController: Symbol.for('AuthPostController')
+    AuthLogin: Symbol.for('AuthLogin'),
+    AuthRepository: Symbol.for('AuthRepository'),
+    CredentialsValidator: Symbol.for('CredentialsValidator'),
+    ValidatorTokenMiddleware: Symbol.for('ValidatorTokenMiddleware'),
+    AuthController: Symbol.for('AuthController')
 }

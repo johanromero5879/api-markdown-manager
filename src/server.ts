@@ -1,47 +1,42 @@
-import express, {json, Router, Express, Response, Request} from 'express'
+import {json} from 'express'
 import http from 'http'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 import { container } from './dependency-injection/inversify.config'
-import {registerRoutes} from "./routes";
-import {logErrorMiddleware, returnError} from "./errors/error-handler";
+import { InversifyExpressServer } from 'inversify-express-utils'
+
+import {returnErrorMiddleware} from "./errors/error-handler";
 
 export default class Server {
-    private app: Express
-    private router: Router
+    private server: InversifyExpressServer
     private httpServer: http.Server
+    private readonly port: string | number
 
-    constructor(port: string) {
-        // Settings
-        this.app = express()
-        this.router = Router()
+    constructor(port: string | number) {
+        this.port = port
+        this.server = new InversifyExpressServer(container, null, { rootPath: '/api' })
 
-        this.app.set('port', port)
+        // Settings middlewares
+        this.server.setConfig((app) => {
+            app.use(json())
 
-        // Routes
-        this.app.use(json())
-        this.app.use('/api', this.router)
+            app.use(cookieParser())
 
-        this.setupRoutes()
-
-        // Middlewares handle errors
-        if(process.env.NODE_ENV === 'development') {
-            this.app.use(logErrorMiddleware)
-        }
-        this.app.use(returnError)
-    }
-
-    private setupRoutes() {
-        registerRoutes(this.router, container)
-
-        this.app.get('/api', (req: Request, res: Response) => {
-            res.send("Markdown manager API")
+            app.use(cors({
+                credentials: true
+            }))
         })
 
+        // Middlewares handle errors
+        this.server.setErrorConfig((app) => {
+            app.use(returnErrorMiddleware)
+        })
     }
 
-    async listen() {
-        this.httpServer = await this.app.listen(this.app.get('port'))
-        console.log(`Server is running on port ${ this.app.get('port') }`)
+    listen() {
+        this.httpServer = this.server.build().listen(this.port)
+        console.log(`Server is running on port ${ this.port }`)
     }
 
     stop() {

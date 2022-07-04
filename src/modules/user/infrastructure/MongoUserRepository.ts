@@ -2,7 +2,7 @@ import {inject, injectable} from "inversify";
 import {ObjectId} from "mongodb";
 import {TYPES} from "../../../dependency-injection/types";
 
-import MongoRepository from "../../shared/infraestructure/MongoRepository";
+import MongoRepository from "../../shared/infrastructure/MongoRepository";
 import {UserRepository} from "../domain/UserRepository";
 import {User} from "../domain/User";
 import BadRequestError from "../../../errors/BadRequestError";
@@ -12,9 +12,10 @@ import NotFoundError from "../../../errors/NotFoundError";
 @injectable()
 export class MongoUserRepository extends MongoRepository implements UserRepository {
     @inject(TYPES.RoleRepository) private roleRepository: RoleRepository
+    protected moduleName: string = 'users'
 
     async findAll(): Promise<User[]> {
-        return await this.collection().aggregate([
+        return await this.collection.aggregate([
             { $lookup: {
                     from: 'roles',
                     localField: 'role',
@@ -30,7 +31,7 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
         await this.validateID(id)
 
         // Looking up user with id given and their role attributes from roles collection
-        const result = await this.collection().aggregate([
+        const result = await this.collection.aggregate([
             { $match: { _id: new ObjectId(id) }},
             { $limit: 1 },
             { $lookup: {
@@ -50,26 +51,22 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
         await this.validateUsernameDuplicated(user.username)
 
         if(!await this.roleRepository.existsById(user.role)) {
-            throw new NotFoundError(`Role ID ${user.role} not found`)
+            throw new NotFoundError({ message: `Role ID ${user.role} not found` })
         }
 
         user.role = new ObjectId(user.role)
-        user._id = (await this.collection().insertOne(user)).insertedId
+        user._id = (await this.collection.insertOne(user)).insertedId
 
         delete user.password
         return user
     }
 
     async validateUsernameDuplicated(username: string, id = null) {
-        const user = await this.collection().findOne({username}) as User
+        const user = await this.collection.findOne({username}) as User
 
         if(user && user._id != id) {
-            throw new BadRequestError(`Username ${username} already exists`)
+            throw new BadRequestError({ message: `Username ${username} already exists` })
         }
-    }
-
-    protected moduleName(): string {
-        return 'users'
     }
 
     async existsById(id: string): Promise<boolean> {

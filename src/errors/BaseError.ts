@@ -1,11 +1,15 @@
-export abstract class BaseError extends Error {
+export interface ErrorOptions {
+    message?: string,
+    onlyDev?: boolean
+}
+
+export abstract class BaseError extends Error{
     statusCode: number
     isOperational: boolean
+    options: ErrorOptions
 
-    protected constructor(name: string, statusCode: number, isOperational: boolean, message: string) {
-        super(message)
-        this.name = name
-        this.statusCode = statusCode
-        this.isOperational = isOperational
+    protected constructor(options?: ErrorOptions) {
+        super(options?.message)
+        this.options = options
     }
 }

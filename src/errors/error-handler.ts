@@ -1,17 +1,29 @@
 import {BaseError} from "./BaseError";
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
+import NotFoundError from "./NotFoundError";
 
 export const logError = (error) => {
-    console.error(error.message)
+    if(error.message) {
+        console.error(error.message)
+    }
 }
 
-export const logErrorMiddleware = (error, req, res, next) => {
-    logError(error)
-    next(error)
-}
+export const returnErrorMiddleware = (error, req: Request, res: Response, next: NextFunction) => {
 
-export const returnError = (error, req: Request, res: Response, next) => {
-    res.status(error.statusCode || 500).send(error.message)
+    if(process.env.NODE_ENV === 'development') {
+        logError(error)
+    }
+
+    if(process.env.NODE_ENV === 'production' && error.onlyDev) {
+        error = new NotFoundError({ message: 'Resource not found' })
+    }
+
+    const statusCode = error.statusCode || 500
+    if(error.message) {
+        res.status(statusCode).send(error.message)
+    }else{
+        res.sendStatus(statusCode)
+    }
 }
 
 export const isOperationalError = (error) => {

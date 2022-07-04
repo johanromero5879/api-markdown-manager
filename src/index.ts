@@ -8,7 +8,8 @@ import { logError, isOperationalError } from './errors/error-handler'
 const start = async () => {
     try{
         await connectDB()
-        await new Server(process.env.PORT || '3000').listen()
+        const server = new Server(process.env.PORT || 3000)
+        server.listen()
     }catch (e) {
         logError(e)
     }

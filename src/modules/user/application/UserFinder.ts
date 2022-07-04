@@ -14,7 +14,7 @@ export class UserFinder {
     async findById(id: string) {
         const user = await this.repository.findById(id)
         if(!user) {
-            throw new NotFoundError(`User ID ${id} not found`)
+            throw new NotFoundError({ message: `User ID ${id} not found` })
         }
         return user
     }

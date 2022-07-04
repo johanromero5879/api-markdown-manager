@@ -13,7 +13,7 @@ export class RoleUpdater {
     async update(id: string, role: Role) {
         const errors = this.validator.getMessageError(role)
         if(errors) {
-            throw new BadRequestError(errors)
+            throw new BadRequestError({ message: errors })
         }
         return await this.repository.update(id, role)
     }

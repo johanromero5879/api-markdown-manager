@@ -12,7 +12,7 @@ export class RoleFinder {
         const role = await this.repository.findByName(name)
 
         if(!role) {
-            throw new NotFoundError(`Role ${name} not found`)
+            throw new NotFoundError({ message: `Role ${name} not found` })
         }
 
         return role
@@ -22,7 +22,7 @@ export class RoleFinder {
         const role = await this.repository.findById(id)
 
         if(!role) {
-            throw new NotFoundError(`ID Role ${id} not found`)
+            throw new NotFoundError({ message: `ID Role ${id} not found` })
         }
 
         return role

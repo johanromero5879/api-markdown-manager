@@ -15,7 +15,7 @@ export class UserCreator {
     async create(user: User) {
         const errors = this.validator.getMessageError(user)
         if(errors) {
-            throw new BadRequestError(errors)
+            throw new BadRequestError({ message: errors })
         }
         user.password = this.bcryptAdapter.hash(user.password)
         return await this.repository.insert(user)
