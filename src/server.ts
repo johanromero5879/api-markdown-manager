@@ -1,5 +1,6 @@
 import {json} from 'express'
-import http from 'http'
+import { readFileSync } from 'fs'
+import https, { createServer } from 'https'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
@@ -10,8 +11,9 @@ import {returnErrorMiddleware} from "./errors/error-handler";
 
 export default class Server {
     private server: InversifyExpressServer
-    private httpServer: http.Server
+    private httpsServer: https.Server
     private readonly port: string | number
+    private httpsCredentials: object
 
     constructor(port: string | number) {
         this.port = port
@@ -26,20 +28,29 @@ export default class Server {
             app.use(cors({
                 credentials: true
             }))
+
+            app.get('/', (req, res) => res.send('Holiwis'))
         })
 
         // Middlewares handle errors
         this.server.setErrorConfig((app) => {
             app.use(returnErrorMiddleware)
         })
+
+        // HTTPS Credentials
+        this.httpsCredentials = {
+            cert: readFileSync('security/cert.pem'),
+            key: readFileSync('security/key.pem'),
+        }
     }
 
     listen() {
-        this.httpServer = this.server.build().listen(this.port)
+        this.httpsServer = createServer(this.httpsCredentials, this.server.build())
+        this.httpsServer.listen(this.port)
         console.log(`Server is running on port ${ this.port }`)
     }
 
     stop() {
-        this.httpServer?.close()
+        this.httpsServer?.close()
     }
 }
