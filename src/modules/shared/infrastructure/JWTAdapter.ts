@@ -5,7 +5,7 @@ import {injectable} from "inversify";
 export class JWTAdapter {
 
     createAccessToken(payload: object) {
-        return sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
+        return sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
     }
 
     createRefreshToken(payload: object) {

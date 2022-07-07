@@ -36,7 +36,6 @@ export class AuthController extends BaseHttpController {
 
                 // Refresh token reuse detected
                 if(!tokenFound) {
-                    console.log('Reuse detected')
                     await this.authToken.removeAll(user._id)
                     clearCookies(res)
                 }
