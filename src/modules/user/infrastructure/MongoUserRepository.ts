@@ -23,7 +23,7 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
                     as: 'role'
                 } },
             { $unwind: '$role' },
-            { $project: { 'password': 0 } },
+            { $project: { password: 0, last_login: 0, 'role.max_session_inactivity': 0 } },
         ]).toArray() as User[]
     }
 
@@ -41,7 +41,7 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
                 as: 'role'
             } },
             { $unwind: '$role' },
-            { $project: { 'password': 0 } },
+            { $project: { password: 0, last_login: 0, 'role.max_session_inactivity': 0 } },
         ]).toArray()
 
         return result[0] as User

@@ -10,6 +10,7 @@ import {UserRepository} from "../modules/user/domain/UserRepository";
 import {AuthRepository} from "../modules/auth/domain/AuthRepository";
 import {CredentialsValidator} from "../modules/auth/domain/CredentialsValidator";
 import {RoleUpdatedValidator, RoleValidator} from "../modules/role/domain/RoleValidator";
+import {TokenRepository} from "../modules/auth/domain/TokenRepository";
 
 /* Application */
 import {RoleCreator} from "../modules/role/application/RoleCreator";
@@ -19,25 +20,27 @@ import {UserCreator} from "../modules/user/application/UserCreator";
 import {UserValidator} from "../modules/user/domain/UserValidator";
 import {UserFinder} from "../modules/user/application/UserFinder";
 import {BcryptAdapter} from "../modules/shared/application/BcryptAdapter";
-import {AuthLogin} from "../modules/auth/application/AuthLogin";
+import {AuthUser} from "../modules/auth/application/AuthUser";
+import {AuthToken} from "../modules/auth/application/AuthToken";
 
 /* Infrastructure */
 import {JWTAdapter} from "../modules/shared/infrastructure/JWTAdapter";
-import {ValidatorTokenMiddleware} from "../modules/auth/infrastructure/ValidatorTokenMiddleware";
+import {TokenMiddleware} from "../modules/auth/infrastructure/middlewares/TokenMiddleware";
 import {MongoUserRepository} from "../modules/user/infrastructure/MongoUserRepository";
 import {MongoRoleRepository} from "../modules/role/infrastructure/MongoRoleRepository";
-import {MongoAuthRepository} from "../modules/auth/infrastructure/MongoAuthRepository";
+import {MongoAuthRepository} from "../modules/auth/infrastructure/repositories/MongoAuthRepository";
 import {UsersController} from "../modules/user/infrastructure/UsersController";
 import {RolesController} from "../modules/role/infrastructure/RolesController";
-import {AuthController} from "../modules/auth/infrastructure/AuthController";
-import RedisRepository from "../modules/shared/infrastructure/RedisRepository";
+import {AuthController} from "../modules/auth/infrastructure/controllers/AuthController";
+import {RedisTokenRepository} from "../modules/auth/infrastructure/repositories/RedisTokenRepository";
+import {RefreshTokenController} from "../modules/auth/infrastructure/controllers/RefreshTokenController";
+import {LogoutController} from "../modules/auth/infrastructure/controllers/LogoutController";
 
 const container = new Container()
 
 // shared
 container.bind<BcryptAdapter>(TYPES.BcryptAdapter).to(BcryptAdapter)
 container.bind<JWTAdapter>(TYPES.JWTAdapter).to(JWTAdapter)
-container.bind<RedisRepository>(TYPES.RedisRepository).to(RedisRepository)
 
 // roles
 container.bind<RoleRepository>(TYPES.RoleRepository).to(MongoRoleRepository)
@@ -56,10 +59,14 @@ container.bind<UserFinder>(TYPES.UserFinder).to(UserFinder)
 container.bind<UsersController>(TYPES.UsersController).to(UsersController)
 
 // auth
-container.bind<AuthLogin>(TYPES.AuthLogin).to(AuthLogin)
+container.bind<AuthUser>(TYPES.AuthUser).to(AuthUser)
 container.bind<AuthRepository>(TYPES.AuthRepository).to(MongoAuthRepository)
 container.bind<Validator>(TYPES.CredentialsValidator).to(CredentialsValidator)
-container.bind<ValidatorTokenMiddleware>(TYPES.ValidatorTokenMiddleware).to(ValidatorTokenMiddleware)
+container.bind<TokenMiddleware>(TYPES.TokenMiddleware).to(TokenMiddleware)
+container.bind<TokenRepository>(TYPES.TokenRepository).to(RedisTokenRepository)
+container.bind<AuthToken>(TYPES.AuthToken).to(AuthToken)
 container.bind<AuthController>(TYPES.AuthController).to(AuthController)
+container.bind<RefreshTokenController>(TYPES.RefreshTokenController).to(RefreshTokenController)
+container.bind<LogoutController>(TYPES.LogoutController).to(LogoutController)
 
 export { container }

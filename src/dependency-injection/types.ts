@@ -1,10 +1,9 @@
-import {ValidatorTokenMiddleware} from "../modules/auth/infrastructure/ValidatorTokenMiddleware";
+import {TokenMiddleware} from "../modules/auth/infrastructure/middlewares/TokenMiddleware";
 
 export const TYPES = {
     // shared
     BcryptAdapter: Symbol.for('BcryptAdapter'),
     JWTAdapter: Symbol.for('JWTAdapter'),
-    RedisRepository: Symbol.for('RedisRepository'),
 
     // roles
     RoleRepository: Symbol.for('RoleRepository'),
@@ -23,9 +22,13 @@ export const TYPES = {
     UsersController: Symbol.for('UsersController'),
 
     // auth
-    AuthLogin: Symbol.for('AuthLogin'),
+    AuthUser: Symbol.for('AuthUser'),
     AuthRepository: Symbol.for('AuthRepository'),
     CredentialsValidator: Symbol.for('CredentialsValidator'),
-    ValidatorTokenMiddleware: Symbol.for('ValidatorTokenMiddleware'),
-    AuthController: Symbol.for('AuthController')
+    TokenMiddleware: Symbol.for('TokenMiddleware'),
+    TokenRepository: Symbol.for('TokenRepository'),
+    AuthToken: Symbol.for('AuthToken'),
+    AuthController: Symbol.for('AuthController'),
+    RefreshTokenController: Symbol.for('RefreshTokenController'),
+    LogoutController: Symbol.for('LogoutController')
 }

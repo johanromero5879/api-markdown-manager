@@ -9,12 +9,12 @@ import {BcryptAdapter} from "../../shared/application/BcryptAdapter";
 import NotFoundError from "../../../errors/NotFoundError";
 
 @injectable()
-export class AuthLogin {
+export class AuthUser {
     @inject(TYPES.AuthRepository) private repository: AuthRepository
     @inject(TYPES.CredentialsValidator) private validator: Validator
     @inject(TYPES.BcryptAdapter) private bcryptAdapter: BcryptAdapter
 
-    async login(credentials: Credentials) {
+    async validate(credentials: Credentials) {
         const errors = this.validator.getMessageError(credentials)
         if(errors) {
             throw new BadRequestError({ message: errors, onlyDev: true })
@@ -30,6 +30,17 @@ export class AuthLogin {
         }
 
         delete user.password
+        user._id = user._id.toString()
+
+        return user
+    }
+
+    async findById(id: string) {
+        const user = await this.repository.findById(id)
+        if(!user) {
+            throw new NotFoundError()
+        }
+
         return user
     }
 }

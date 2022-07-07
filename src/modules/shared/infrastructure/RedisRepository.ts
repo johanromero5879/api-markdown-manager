@@ -3,34 +3,30 @@ import {injectable} from "inversify";
 
 @injectable()
 export default class RedisRepository {
-    private client: RedisClientType
+    private readonly client: RedisClientType
 
     constructor() {
-        this.client = createClient()
+        this.client = createClient({ url: process.env.REDIS_URI })
+        this.client.connect()
     }
 
-    private async connect() {
-        await this.client.connect()
+    protected async push(key: string, element) {
+        await this.client.rPush(key, element)
     }
 
-    private disconnect() {
-        this.client?.disconnect()
+    protected async getList(key: string) {
+        return await this.client.lRange(key, 0, -1)
     }
 
-    async set(key: string, value: string) {
-        try {
-            await this.connect()
-            await this.client.set(key, value)
-        }finally {
-            this.disconnect()
-        }
+    protected async removeList(key: string) {
+        await this.client.del(key)
     }
 
-    async get(key: string) {
-        try {
-            return await this.client.get(key)
-        }finally {
-            this.disconnect()
-        }
+    protected async removeItem(key: string, element) {
+        await this.client.lRem(key, 1, element)
+    }
+
+    protected async existsItem(key: string, element) {
+        return await this.client.lPos(key, element) !== null
     }
 }

@@ -6,13 +6,9 @@ import Server from './server'
 import { logError, isOperationalError } from './errors/error-handler'
 
 const start = async () => {
-    try{
-        await connectDB()
-        const server = new Server(process.env.PORT || 3000)
-        server.listen()
-    }catch (e) {
-        logError(e)
-    }
+    await connectDB()
+    const server = new Server(process.env.PORT || 3000)
+    server.listen()
 }
 
 process.on('unhandledRejection', error => {
