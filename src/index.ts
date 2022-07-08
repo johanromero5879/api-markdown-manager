@@ -4,9 +4,16 @@ config() // Setup environment variables
 import { connectDB } from './database'
 import Server from './server'
 import { logError, isOperationalError } from './errors/error-handler'
+import { createRoles } from './initialSetup'
 
 const start = async () => {
+    // Connect to db
     await connectDB()
+
+    // Initial setup
+    await createRoles()
+
+    // Start server
     const server = new Server(process.env.PORT || 3000)
     server.listen()
 }
