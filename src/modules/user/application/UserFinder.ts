@@ -1,7 +1,7 @@
 import {injectable, inject} from "inversify";
 import {TYPES} from "../../../dependency-injection/types";
 import {UserRepository} from "../domain/UserRepository";
-import NotFoundError from "../../../errors/NotFoundError";
+import {NotFoundError} from "../../../errors/NotFoundError";
 
 @injectable()
 export class UserFinder {

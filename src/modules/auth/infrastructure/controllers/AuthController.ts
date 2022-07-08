@@ -5,8 +5,7 @@ import {
     request,
     response,
     next,
-    httpGet,
-    BaseHttpController
+    httpGet
 } from 'inversify-express-utils'
 import {inject} from "inversify";
 
@@ -14,10 +13,10 @@ import {TYPES} from "../../../../dependency-injection/types";
 import {AuthUser} from "../../application/AuthUser";
 import {JWTAdapter} from "../../../shared/infrastructure/JWTAdapter";
 import {AuthToken} from "../../application/AuthToken";
-import { createRefreshTokenCookie, clearCookies } from '../auth-cookie'
+import { createRefreshTokenCookie, clearCookies } from '../cookie-utils'
 
 @controller('/auth')
-export class AuthController extends BaseHttpController {
+export class AuthController {
     @inject(TYPES.AuthUser) private authUser: AuthUser
     @inject(TYPES.AuthToken) private authToken: AuthToken
     @inject(TYPES.JWTAdapter) private jwtAdapter: JWTAdapter
@@ -53,7 +52,7 @@ export class AuthController extends BaseHttpController {
     @httpGet('/user', TYPES.TokenMiddleware)
     async getUser(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
         try {
-            const user = this.httpContext.user.details
+            const user = req['user']
             res.json(user)
         }catch(error) {
             next(error)

@@ -35,6 +35,7 @@ import {AuthController} from "../modules/auth/infrastructure/controllers/AuthCon
 import {RedisTokenRepository} from "../modules/auth/infrastructure/repositories/RedisTokenRepository";
 import {RefreshTokenController} from "../modules/auth/infrastructure/controllers/RefreshTokenController";
 import {LogoutController} from "../modules/auth/infrastructure/controllers/LogoutController";
+import {AdminMiddleware} from "../modules/auth/infrastructure/middlewares/AdminMiddleware";
 
 const container = new Container()
 
@@ -63,6 +64,7 @@ container.bind<AuthUser>(TYPES.AuthUser).to(AuthUser)
 container.bind<AuthRepository>(TYPES.AuthRepository).to(MongoAuthRepository)
 container.bind<Validator>(TYPES.CredentialsValidator).to(CredentialsValidator)
 container.bind<TokenMiddleware>(TYPES.TokenMiddleware).to(TokenMiddleware)
+container.bind<AdminMiddleware>(TYPES.AdminMiddleware).to(AdminMiddleware)
 container.bind<TokenRepository>(TYPES.TokenRepository).to(RedisTokenRepository)
 container.bind<AuthToken>(TYPES.AuthToken).to(AuthToken)
 container.bind<AuthController>(TYPES.AuthController).to(AuthController)

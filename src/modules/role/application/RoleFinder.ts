@@ -2,7 +2,7 @@ import {inject, injectable} from "inversify";
 import {TYPES} from "../../../dependency-injection/types";
 
 import {RoleRepository} from "../domain/RoleRepository";
-import NotFoundError from "../../../errors/NotFoundError";
+import {NotFoundError} from "../../../errors/NotFoundError";
 
 @injectable()
 export class RoleFinder {

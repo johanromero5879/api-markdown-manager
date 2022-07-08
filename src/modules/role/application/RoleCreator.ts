@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 
 import { TYPES } from "../../../dependency-injection/types";
-import BadRequestError from "../../../errors/BadRequestError";
+import {BadRequestError} from "../../../errors/BadRequestError";
 import {RoleRepository} from "../domain/RoleRepository";
 import {Role} from "../domain/Role";
 import {RoleValidator} from "../domain/RoleValidator";

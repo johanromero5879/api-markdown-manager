@@ -6,7 +6,6 @@ import {TYPES} from "../../../../dependency-injection/types";
 import {UnauthorizedError} from "../../../../errors/UnauthorizedError";
 import {JWTAdapter} from "../../../shared/infrastructure/JWTAdapter";
 import {ForbiddenError} from "../../../../errors/ForbiddenError";
-import {Session} from "../Session";
 
 @injectable()
 export class TokenMiddleware extends BaseMiddleware {
@@ -27,7 +26,7 @@ export class TokenMiddleware extends BaseMiddleware {
 
         try {
             const payload = this.jwtAdapter.verifyAccessToken(token)
-            this.httpContext.user = new Session(payload['user'])
+            req['user'] = payload['user']
             next()
         }catch(error) {
             throw new ForbiddenError({ message: error.message, onlyDev: true })

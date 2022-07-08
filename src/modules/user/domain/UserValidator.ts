@@ -27,10 +27,6 @@ export class UserValidator extends Validator {
                 type: String,
                 required: true,
                 use: { isPasswordValid }
-            },
-            role: {
-                type: String,
-                required: true
             }
         })
 

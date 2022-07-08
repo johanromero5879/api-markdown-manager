@@ -4,9 +4,9 @@ import {TYPES} from "../../../dependency-injection/types";
 import {Credentials} from "../domain/Credentials";
 import {AuthRepository} from "../domain/AuthRepository";
 import Validator from "../../shared/domain/Validator";
-import BadRequestError from "../../../errors/BadRequestError";
+import {BadRequestError} from "../../../errors/BadRequestError";
 import {BcryptAdapter} from "../../shared/application/BcryptAdapter";
-import NotFoundError from "../../../errors/NotFoundError";
+import {NotFoundError} from "../../../errors/NotFoundError";
 
 @injectable()
 export class AuthUser {

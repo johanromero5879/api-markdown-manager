@@ -28,8 +28,6 @@ export default class Server {
             app.use(cors({
                 credentials: true
             }))
-
-            app.get('/', (req, res) => res.send('Holiwis'))
         })
 
         // Middlewares handle errors

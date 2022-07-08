@@ -1,6 +1,6 @@
 import {BaseError, ErrorOptions} from "./BaseError";
 
-export default class NotFoundError extends BaseError {
+export class NotFoundError extends BaseError {
     constructor(options?: ErrorOptions) {
         super(options)
         this.name = 'Not Found'

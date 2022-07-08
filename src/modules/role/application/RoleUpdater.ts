@@ -3,7 +3,7 @@ import {RoleRepository} from "../domain/RoleRepository";
 import {TYPES} from "../../../dependency-injection/types";
 import {Role} from "../domain/Role";
 import Validator from "../../shared/domain/Validator";
-import BadRequestError from "../../../errors/BadRequestError";
+import {BadRequestError} from "../../../errors/BadRequestError";
 
 @injectable()
 export class RoleUpdater {

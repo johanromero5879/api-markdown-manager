@@ -6,11 +6,10 @@ import {
     request,
     response,
     next,
-    httpGet,
-    BaseHttpController
+    httpGet
 } from 'inversify-express-utils'
 
-import {clearCookies, createRefreshTokenCookie} from "../auth-cookie";
+import {clearCookies, createRefreshTokenCookie} from "../cookie-utils";
 import {UnauthorizedError} from "../../../../errors/UnauthorizedError";
 import {ForbiddenError} from "../../../../errors/ForbiddenError";
 import {AuthToken} from "../../application/AuthToken";
@@ -18,7 +17,7 @@ import {JWTAdapter} from "../../../shared/infrastructure/JWTAdapter";
 import {AuthUser} from "../../application/AuthUser";
 
 @controller('/token')
-export class RefreshTokenController extends BaseHttpController {
+export class RefreshTokenController {
     @inject(TYPES.AuthUser) private authUser: AuthUser
     @inject(TYPES.AuthToken) private authToken: AuthToken
     @inject(TYPES.JWTAdapter) private jwtAdapter: JWTAdapter

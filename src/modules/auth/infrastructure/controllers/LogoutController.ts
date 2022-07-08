@@ -6,16 +6,15 @@ import {
     request,
     response,
     next,
-    httpDelete,
-    BaseHttpController
+    httpDelete
 } from 'inversify-express-utils'
 
-import {clearCookies} from "../auth-cookie";
+import {clearCookies} from "../cookie-utils";
 import {AuthToken} from "../../application/AuthToken";
 import {JWTAdapter} from "../../../shared/infrastructure/JWTAdapter";
 
 @controller('/logout')
-export class LogoutController extends BaseHttpController {
+export class LogoutController {
     @inject(TYPES.AuthToken) private authToken: AuthToken
     @inject(TYPES.JWTAdapter) private jwtAdapter: JWTAdapter
 
@@ -29,8 +28,8 @@ export class LogoutController extends BaseHttpController {
             await this.authToken.remove(payload['user_id'], refreshToken)
         }
 
-        //Clear user in httpContext
-        this.httpContext.user = null
+        //Clear user in request object
+        delete req['user']
 
         clearCookies(res)
         res.sendStatus(204)

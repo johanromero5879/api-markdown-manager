@@ -1,6 +1,6 @@
 import {BaseError} from "./BaseError";
 import {NextFunction, Request, Response} from "express";
-import NotFoundError from "./NotFoundError";
+import {NotFoundError} from "./NotFoundError";
 
 export const logError = (error) => {
     if(error.message) {
@@ -9,7 +9,6 @@ export const logError = (error) => {
 }
 
 export const returnErrorMiddleware = (error, req: Request, res: Response, next: NextFunction) => {
-
     if(process.env.NODE_ENV === 'development') {
         logError(error)
     }

@@ -5,9 +5,9 @@ import {TYPES} from "../../../dependency-injection/types";
 import MongoRepository from "../../shared/infrastructure/MongoRepository";
 import {UserRepository} from "../domain/UserRepository";
 import {User} from "../domain/User";
-import BadRequestError from "../../../errors/BadRequestError";
 import {RoleRepository} from "../../role/domain/RoleRepository";
-import NotFoundError from "../../../errors/NotFoundError";
+import {NotFoundError} from "../../../errors/NotFoundError";
+import {ConflictError} from "../../../errors/ConflictError";
 
 @injectable()
 export class MongoUserRepository extends MongoRepository implements UserRepository {
@@ -65,7 +65,7 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
         const user = await this.collection.findOne({username}) as User
 
         if(user && user._id != id) {
-            throw new BadRequestError({ message: `Username ${username} already exists` })
+            throw new ConflictError({ message: `Username ${username} already exists` })
         }
     }
 

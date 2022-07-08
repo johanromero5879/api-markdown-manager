@@ -3,8 +3,8 @@ import {injectable} from "inversify";
 import MongoRepository from "../../shared/infrastructure/MongoRepository";
 import {RoleRepository} from "../domain/RoleRepository";
 import {Role} from "../domain/Role";
-import BadRequestError from "../../../errors/BadRequestError";
 import {ObjectId} from "mongodb";
+import {ConflictError} from "../../../errors/ConflictError";
 
 @injectable()
 export class MongoRoleRepository extends MongoRepository implements RoleRepository {
@@ -52,7 +52,7 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
         const role = await this.collection.findOne(query) as Role
 
         if(role && role._id != id) {
-            throw new BadRequestError({ message: `Role ${name.toLowerCase()} already exists` })
+            throw new ConflictError({ message: `Role ${name.toLowerCase()} already exists` })
         }
     }
 }

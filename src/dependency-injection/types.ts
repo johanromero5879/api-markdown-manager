@@ -26,6 +26,7 @@ export const TYPES = {
     AuthRepository: Symbol.for('AuthRepository'),
     CredentialsValidator: Symbol.for('CredentialsValidator'),
     TokenMiddleware: Symbol.for('TokenMiddleware'),
+    AdminMiddleware: Symbol.for('AdminMiddleware'),
     TokenRepository: Symbol.for('TokenRepository'),
     AuthToken: Symbol.for('AuthToken'),
     AuthController: Symbol.for('AuthController'),

@@ -1,6 +1,6 @@
 import {Collection, MongoClient, ObjectId} from "mongodb";
 import { injectable } from "inversify";
-import BadRequestError from "../../../errors/BadRequestError";
+import {BadRequestError} from "../../../errors/BadRequestError";
 
 @injectable()
 export default abstract class MongoRepository {
