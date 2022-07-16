@@ -31,5 +31,11 @@ export const TYPES = {
     AuthToken: Symbol.for('AuthToken'),
     AuthController: Symbol.for('AuthController'),
     RefreshTokenController: Symbol.for('RefreshTokenController'),
-    LogoutController: Symbol.for('LogoutController')
+    LogoutController: Symbol.for('LogoutController'),
+
+    // documents
+    DocumentRepository: Symbol.for('DocumentRepository'),
+    DocumentCreator: Symbol.for('DocumentCreator'),
+    DocumentController: Symbol.for('DocumentController'),
+    DocumentValidator: Symbol.for('DocumentValidator'),
 }

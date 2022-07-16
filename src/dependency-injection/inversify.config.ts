@@ -11,6 +11,8 @@ import {AuthRepository} from "../modules/auth/domain/AuthRepository";
 import {CredentialsValidator} from "../modules/auth/domain/CredentialsValidator";
 import {RoleUpdatedValidator, RoleValidator} from "../modules/role/domain/RoleValidator";
 import {TokenRepository} from "../modules/auth/domain/TokenRepository";
+import {DocumentRepository} from "../modules/document/domain/DocumentRepository";
+import {DocumentValidator} from "../modules/document/domain/DocumentValidator";
 
 /* Application */
 import {RoleCreator} from "../modules/role/application/RoleCreator";
@@ -22,6 +24,7 @@ import {UserFinder} from "../modules/user/application/UserFinder";
 import {BcryptAdapter} from "../modules/shared/application/BcryptAdapter";
 import {AuthUser} from "../modules/auth/application/AuthUser";
 import {AuthToken} from "../modules/auth/application/AuthToken";
+import {DocumentCreator} from "../modules/document/application/DocumentCreator";
 
 /* Infrastructure */
 import {JWTAdapter} from "../modules/shared/infrastructure/JWTAdapter";
@@ -36,6 +39,8 @@ import {RedisTokenRepository} from "../modules/auth/infrastructure/repositories/
 import {RefreshTokenController} from "../modules/auth/infrastructure/controllers/RefreshTokenController";
 import {LogoutController} from "../modules/auth/infrastructure/controllers/LogoutController";
 import {AdminMiddleware} from "../modules/auth/infrastructure/middlewares/AdminMiddleware";
+import {MongoDocumentRepository} from "../modules/document/infrastructure/MongoDocumentRepository";
+import {DocumentController} from "../modules/document/infrastructure/DocumentController";
 
 const container = new Container()
 
@@ -70,5 +75,11 @@ container.bind<AuthToken>(TYPES.AuthToken).to(AuthToken)
 container.bind<AuthController>(TYPES.AuthController).to(AuthController)
 container.bind<RefreshTokenController>(TYPES.RefreshTokenController).to(RefreshTokenController)
 container.bind<LogoutController>(TYPES.LogoutController).to(LogoutController)
+
+// document
+container.bind<DocumentRepository>(TYPES.DocumentRepository).to(MongoDocumentRepository)
+container.bind<DocumentCreator>(TYPES.DocumentCreator).to(DocumentCreator)
+container.bind<DocumentController>(TYPES.DocumentController).to(DocumentController)
+container.bind<DocumentValidator>(TYPES.DocumentValidator).to(DocumentValidator)
 
 export { container }

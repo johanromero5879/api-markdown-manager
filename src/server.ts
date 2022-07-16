@@ -28,6 +28,12 @@ export default class Server {
             app.use(cors({
                 credentials: true
             }))
+
+            app.use((req, res, next) => {
+                // Prevent XSS
+                res.setHeader("Content-Security-Policy", "script-src 'none'")
+                next()
+            })
         })
 
         // Middlewares handle errors
