@@ -34,4 +34,8 @@ export class MongoAuthRepository extends MongoRepository implements AuthReposito
         return result[0] as User
     }
 
+    async updateLastLogin(id: string): Promise<void> {
+        await this.collection.updateOne({ _id: new ObjectId(id) }, { $set: { last_login: new Date() } })
+    }
+
 }

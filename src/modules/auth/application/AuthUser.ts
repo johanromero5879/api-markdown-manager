@@ -29,6 +29,8 @@ export class AuthUser {
             throw new NotFoundError({ message: 'Credentials are not valid', onlyDev: true})
         }
 
+        this.repository.updateLastLogin(user._id)
+
         delete user.password
         user._id = user._id.toString()
 
