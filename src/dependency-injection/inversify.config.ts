@@ -25,6 +25,7 @@ import {BcryptAdapter} from "../modules/shared/application/BcryptAdapter";
 import {AuthUser} from "../modules/auth/application/AuthUser";
 import {AuthToken} from "../modules/auth/application/AuthToken";
 import {DocumentCreator} from "../modules/document/application/DocumentCreator";
+import {DocumentFinder} from "../modules/document/application/DocumentFinder";
 
 /* Infrastructure */
 import {JWTAdapter} from "../modules/shared/infrastructure/JWTAdapter";
@@ -81,5 +82,6 @@ container.bind<DocumentRepository>(TYPES.DocumentRepository).to(MongoDocumentRep
 container.bind<DocumentCreator>(TYPES.DocumentCreator).to(DocumentCreator)
 container.bind<DocumentController>(TYPES.DocumentController).to(DocumentController)
 container.bind<DocumentValidator>(TYPES.DocumentValidator).to(DocumentValidator)
+container.bind<DocumentFinder>(TYPES.DocumentFinder).to(DocumentFinder)
 
 export { container }

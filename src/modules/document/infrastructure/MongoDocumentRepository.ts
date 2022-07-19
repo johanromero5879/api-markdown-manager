@@ -12,19 +12,93 @@ import {ObjectId} from "mongodb";
 @injectable()
 export class MongoDocumentRepository extends MongoRepository implements DocumentRepository {
     @inject(TYPES.UserRepository) private userRepository: UserRepository
-
     protected moduleName: string = 'documents'
 
-    findAll(): Promise<Document[]> {
-        return Promise.resolve([]);
+    async findAll(): Promise<Document[]> {
+        return await this.collection.aggregate([
+            { $lookup: {
+                from: 'users',
+                localField: 'created_by',
+                foreignField: '_id',
+                as: 'created_by'
+            } },
+            { $unwind: '$created_by' },
+            { $lookup: {
+                from: 'users',
+                localField: 'modified_by',
+                foreignField: '_id',
+                as: 'modified_by'
+            } },
+            { $unwind: '$modified_by' },
+            { $project: {
+                _id: 1,
+                title: 1,
+                content: 1,
+                'created_by.username': 1,
+                'created_by.fullname': 1,
+                'modified_by.username': 1,
+                'modified_by.fullname': 1
+            } }
+        ]).toArray() as Document[]
     }
 
-    findById(id: string): Promise<Document> {
-        return Promise.resolve(undefined);
+    async findById(id: string): Promise<Document> {
+        await this.validateID(id)
+
+        const result = await this.collection.aggregate([
+            { $match: { _id: new ObjectId(id) } },
+            { $lookup: {
+                    from: 'users',
+                    localField: 'created_by',
+                    foreignField: '_id',
+                    as: 'created_by'
+                } },
+            { $unwind: '$created_by' },
+            { $lookup: {
+                    from: 'users',
+                    localField: 'modified_by',
+                    foreignField: '_id',
+                    as: 'modified_by'
+                } },
+            { $unwind: '$modified_by' },
+            { $project: {
+                _id: 1,
+                title: 1,
+                content: 1,
+                'created_by.username': 1,
+                'created_by.fullname': 1,
+                'modified_by.username': 1,
+                'modified_by.fullname': 1
+            } }
+        ]).toArray()
+
+        return result[0] as Document
     }
 
-    findTitles(search: string, limit: number): Promise<Document[]> {
-        return Promise.resolve([]);
+    async findTitles(search: string, limit: number): Promise<Document[]> {
+        return await this.collection.aggregate([
+            { $match: { title: { $regex: `${search}`, $options: 'i' } } },
+            { $sort: { title: 1 } },
+            { $limit: limit },
+            { $lookup: {
+                from: 'users',
+                localField: 'created_by',
+                foreignField: '_id',
+                as: 'created_by'
+            } },
+            { $unwind: '$created_by' },
+            { $lookup: {
+                    from: 'users',
+                    localField: 'modified_by',
+                    foreignField: '_id',
+                    as: 'modified_by'
+                } },
+            { $unwind: '$modified_by' },
+            { $project: {
+                _id: 1,
+                title: 1
+            } }
+        ]).toArray() as Document[]
     }
 
     async insert(document: Document): Promise<Document> {
