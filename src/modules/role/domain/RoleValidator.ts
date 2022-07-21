@@ -27,4 +27,11 @@ export class RoleUpdatedValidator extends RoleValidator {
         super()
         this.validator.path('name').required(false)
     }
+
+    getMessageError(obj) {
+        if(!obj.name && !obj.max_session_inactivity) {
+            return 'You must put at least one valid parameter to update.'
+        }
+        return super.getMessageError(obj)
+    }
 }

@@ -7,7 +7,7 @@ import {ObjectId} from "mongodb";
 import {ConflictError} from "../../../errors/ConflictError";
 
 @injectable()
-export class MongoRoleRepository extends MongoRepository implements RoleRepository {
+export class MongoRoleRepository extends MongoRepository<Role> implements RoleRepository {
     protected moduleName: string = 'roles'
 
     async findById(id: string): Promise<Role> {
@@ -31,13 +31,11 @@ export class MongoRoleRepository extends MongoRepository implements RoleReposito
     }
 
     async update(id: string, role: Role): Promise<Role> {
-        await this.validateID(id)
+        this.validateID(id)
         await this.validateNameDuplicated(role.name, id)
 
-        const rolUpdated = (await this.collection
+        return (await this.collection
             .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: role }, { returnDocument: 'after' })).value as Role
-
-        return rolUpdated
     }
 
     async existsById(id: string): Promise<boolean> {

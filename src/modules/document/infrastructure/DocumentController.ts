@@ -1,17 +1,18 @@
 import {Request, Response, NextFunction} from "express";
-import {controller, httpPost, request, response, next, httpGet} from "inversify-express-utils";
+import {controller, httpPost, request, response, next, httpGet, httpPatch} from "inversify-express-utils";
 import {inject} from "inversify";
 import {TYPES} from "../../../dependency-injection/types";
 
 import {DocumentCreator} from "../application/DocumentCreator";
 import {Document} from '../domain/Document'
 import {DocumentFinder} from "../application/DocumentFinder";
-import {BadRequestError} from "../../../errors/BadRequestError";
+import {DocumentUpdater} from "../application/DocumentUpdater";
 
 @controller('/documents')
 export class DocumentController {
     @inject(TYPES.DocumentCreator) private documentCreator: DocumentCreator
     @inject(TYPES.DocumentFinder) private documentFinder: DocumentFinder
+    @inject(TYPES.DocumentUpdater) private documentUpdater: DocumentUpdater
 
     @httpPost('/', TYPES.TokenMiddleware)
     async create(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
@@ -41,18 +42,10 @@ export class DocumentController {
     @httpGet('/titles')
     async findByTitles(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
         try {
-            const search = req.query.search
+            const search = req.query.search+''
             const limit = parseInt(req.query.limit+'') || 5
 
-            if(!search) {
-                throw new BadRequestError({ message: 'Search filter is missing' })
-            }
-
-            if(!(limit >= 1 && limit <= 100)) {
-                throw new BadRequestError({ message: 'Limit range out of the range 1-100' })
-            }
-
-            const documents = await this.documentFinder.findByTitle(search+'', limit)
+            const documents = await this.documentFinder.findByTitle(search, limit)
             res.json(documents)
         }catch (error) {
             next(error)
@@ -62,7 +55,22 @@ export class DocumentController {
     @httpGet('/:id')
     async findById(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
         try {
-            const document = await this.documentFinder.findById(req.params.id)
+            let document = await this.documentFinder.findById(req.params.id)
+            res.json(document)
+        }catch (error) {
+            next(error)
+        }
+    }
+
+    @httpPatch('/:id', TYPES.TokenMiddleware)
+    async update(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
+        try {
+            let document = req.body
+
+            // Set current logged user as author of modification
+            document.modified_by = req['user']._id
+
+            document = await this.documentUpdater.update(req.params.id, document)
             res.json(document)
         }catch (error) {
             next(error)

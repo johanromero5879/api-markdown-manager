@@ -2,6 +2,7 @@ import {injectable} from "inversify";
 import Schema from "validate";
 
 import Validator from "../../shared/domain/Validator";
+import {BadRequestError} from "../../../errors/BadRequestError";
 
 @injectable()
 export class DocumentValidator extends Validator {
@@ -31,5 +32,21 @@ export class DocumentValidator extends Validator {
                 type: String
             }
         })
+    }
+}
+
+@injectable()
+export class DocumentUpdatedValidator extends DocumentValidator {
+    constructor() {
+        super()
+        this.validator.path('title').required(false)
+        this.validator.path('content').required(false)
+    }
+
+    getMessageError(obj) {
+        if(!obj.title && !obj.content) {
+            return 'You must put at least one valid parameter to update.'
+        }
+        return super.getMessageError(obj)
     }
 }

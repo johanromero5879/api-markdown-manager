@@ -1,4 +1,4 @@
-interface DocumentChange {
+export interface DocumentChange {
     title: string
     content: string,
     modified_at: Date,

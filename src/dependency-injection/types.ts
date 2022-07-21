@@ -38,5 +38,7 @@ export const TYPES = {
     DocumentCreator: Symbol.for('DocumentCreator'),
     DocumentController: Symbol.for('DocumentController'),
     DocumentValidator: Symbol.for('DocumentValidator'),
-    DocumentFinder: Symbol.for('DocumentFinder')
+    DocumentFinder: Symbol.for('DocumentFinder'),
+    DocumentUpdater: Symbol.for('DocumentUpdater'),
+    DocumentUpdatedValidator: Symbol.for('DocumentUpdatedValidator')
 }

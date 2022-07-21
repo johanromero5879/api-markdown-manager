@@ -5,7 +5,7 @@ import {User} from "../../../user/domain/User";
 import {ObjectId} from "mongodb";
 
 @injectable()
-export class MongoAuthRepository extends MongoRepository implements AuthRepository{
+export class MongoAuthRepository extends MongoRepository<User> implements AuthRepository{
     protected moduleName: string = 'users'
 
     async findByUsername(username: string): Promise<User> {
@@ -21,7 +21,7 @@ export class MongoAuthRepository extends MongoRepository implements AuthReposito
     }
 
     async findById(id: string): Promise<User> {
-        await this.validateID(id)
+        this.validateID(id)
 
         const result = await this.collection.aggregate([
             { $match: { _id: new ObjectId(id) } },

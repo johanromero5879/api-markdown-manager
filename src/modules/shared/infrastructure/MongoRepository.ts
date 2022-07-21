@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 import {BadRequestError} from "../../../errors/BadRequestError";
 
 @injectable()
-export default abstract class MongoRepository {
+export default abstract class MongoRepository<Entity> {
     private client: MongoClient
     protected abstract moduleName: string
 
@@ -11,8 +11,8 @@ export default abstract class MongoRepository {
         this.client = new MongoClient(process.env.MONGODB_URI)
     }
 
-    protected get collection(): Collection {
-        return this.client.db().collection(this.moduleName)
+    protected get collection(): Collection<Entity> {
+        return this.client.db().collection<Entity>(this.moduleName)
     }
 
     protected validateID(id: string) {

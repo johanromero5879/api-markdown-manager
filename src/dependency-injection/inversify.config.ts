@@ -12,7 +12,7 @@ import {CredentialsValidator} from "../modules/auth/domain/CredentialsValidator"
 import {RoleUpdatedValidator, RoleValidator} from "../modules/role/domain/RoleValidator";
 import {TokenRepository} from "../modules/auth/domain/TokenRepository";
 import {DocumentRepository} from "../modules/document/domain/DocumentRepository";
-import {DocumentValidator} from "../modules/document/domain/DocumentValidator";
+import {DocumentUpdatedValidator, DocumentValidator} from "../modules/document/domain/DocumentValidator";
 
 /* Application */
 import {RoleCreator} from "../modules/role/application/RoleCreator";
@@ -26,6 +26,7 @@ import {AuthUser} from "../modules/auth/application/AuthUser";
 import {AuthToken} from "../modules/auth/application/AuthToken";
 import {DocumentCreator} from "../modules/document/application/DocumentCreator";
 import {DocumentFinder} from "../modules/document/application/DocumentFinder";
+import {DocumentUpdater} from "../modules/document/application/DocumentUpdater";
 
 /* Infrastructure */
 import {JWTAdapter} from "../modules/shared/infrastructure/JWTAdapter";
@@ -81,7 +82,9 @@ container.bind<LogoutController>(TYPES.LogoutController).to(LogoutController)
 container.bind<DocumentRepository>(TYPES.DocumentRepository).to(MongoDocumentRepository)
 container.bind<DocumentCreator>(TYPES.DocumentCreator).to(DocumentCreator)
 container.bind<DocumentController>(TYPES.DocumentController).to(DocumentController)
-container.bind<DocumentValidator>(TYPES.DocumentValidator).to(DocumentValidator)
+container.bind<Validator>(TYPES.DocumentValidator).to(DocumentValidator)
 container.bind<DocumentFinder>(TYPES.DocumentFinder).to(DocumentFinder)
+container.bind<DocumentUpdater>(TYPES.DocumentUpdater).to(DocumentUpdater)
+container.bind<Validator>(TYPES.DocumentUpdatedValidator).to(DocumentUpdatedValidator)
 
 export { container }

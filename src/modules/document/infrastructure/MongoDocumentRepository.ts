@@ -10,7 +10,7 @@ import {ObjectId} from "mongodb";
 
 
 @injectable()
-export class MongoDocumentRepository extends MongoRepository implements DocumentRepository {
+export class MongoDocumentRepository extends MongoRepository<Document> implements DocumentRepository {
     @inject(TYPES.UserRepository) private userRepository: UserRepository
     protected moduleName: string = 'documents'
 
@@ -43,7 +43,7 @@ export class MongoDocumentRepository extends MongoRepository implements Document
     }
 
     async findById(id: string): Promise<Document> {
-        await this.validateID(id)
+        this.validateID(id)
 
         const result = await this.collection.aggregate([
             { $match: { _id: new ObjectId(id) } },
@@ -120,6 +120,40 @@ export class MongoDocumentRepository extends MongoRepository implements Document
         document.history = []
 
         document._id = (await this.collection.insertOne(document)).insertedId
+
+        delete document.history
+        return document
+    }
+
+    async update(id: string, document: Document): Promise<Document> {
+        this.validateID(id)
+
+        // Get current data from document for save it as change in history
+        const oldDocument = await this.collection.findOne({ _id: new ObjectId(id) }) as Document
+
+        if(!oldDocument) {
+            throw new NotFoundError({ message: `Document ID ${ id } not found` })
+        }
+
+        // Save actual data in an object for adding in changes history
+        const change = {
+            title: oldDocument.title,
+            content: oldDocument.content,
+            modified_at: oldDocument.modified_at,
+            modified_by: oldDocument.modified_by
+        }
+
+        // Cast modified_by to ObjectID and set modified_at to current date
+        document.modified_by = new ObjectId(document.modified_by)
+        document.modified_at = new Date()
+
+        document = (await this.collection.findOneAndUpdate(
+            { _id: new ObjectId(id) },
+            {
+                $set: document,
+                $push: { history: change }
+            },
+            { returnDocument: 'after', projection: { history: 0 } })).value
 
         return document
     }

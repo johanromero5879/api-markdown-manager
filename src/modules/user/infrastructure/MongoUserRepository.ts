@@ -10,7 +10,7 @@ import {NotFoundError} from "../../../errors/NotFoundError";
 import {ConflictError} from "../../../errors/ConflictError";
 
 @injectable()
-export class MongoUserRepository extends MongoRepository implements UserRepository {
+export class MongoUserRepository extends MongoRepository<User> implements UserRepository {
     @inject(TYPES.RoleRepository) private roleRepository: RoleRepository
     protected moduleName: string = 'users'
 
@@ -28,7 +28,7 @@ export class MongoUserRepository extends MongoRepository implements UserReposito
     }
 
     async findById(id: string): Promise<User> {
-        await this.validateID(id)
+        this.validateID(id)
 
         // Looking up user with id given and their role attributes from roles collection
         const result = await this.collection.aggregate([
