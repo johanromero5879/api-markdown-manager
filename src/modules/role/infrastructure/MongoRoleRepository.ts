@@ -39,7 +39,8 @@ export class MongoRoleRepository extends MongoRepository<Role> implements RoleRe
     }
 
     async existsById(id: string): Promise<boolean> {
-        return !!(await this.findById(id));
+        this.validateID(id)
+        return !!(await this.collection.findOne({ _id: new ObjectId(id) }));
     }
 
     async validateNameDuplicated(name: string, id = null) {

@@ -70,6 +70,7 @@ export class MongoUserRepository extends MongoRepository<User> implements UserRe
     }
 
     async existsById(id: string): Promise<boolean> {
-        return !!(await this.findById(id))
+        this.validateID(id)
+        return !!(await this.collection.findOne({_id: new ObjectId(id)}))
     }
 }

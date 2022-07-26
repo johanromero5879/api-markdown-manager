@@ -135,6 +135,10 @@ export class MongoDocumentRepository extends MongoRepository<Document> implement
             throw new NotFoundError({ message: `Document ID ${ id } not found` })
         }
 
+        if(!await this.userRepository.existsById(document.modified_by)){
+            throw new NotFoundError({ message: `Owner ID not found` })
+        }
+
         // Save actual data in an object for adding in changes history
         const change = {
             title: oldDocument.title,
