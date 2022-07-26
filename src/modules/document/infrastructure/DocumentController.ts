@@ -23,6 +23,10 @@ export class DocumentController {
             document.created_by = req['user']._id
 
             document = await this.documentCreator.insert(document)
+
+            // Emit document created to client sockets
+            req.app.get('io').emit('document:created', document)
+
             res.status(201).json(document)
         }catch(error) {
             next(error)
@@ -71,6 +75,10 @@ export class DocumentController {
             document.modified_by = req['user']._id
 
             document = await this.documentUpdater.update(req.params.id, document)
+
+            // Emit document created to client sockets
+            req.app.get('io').emit('document:updated', document)
+
             res.json(document)
         }catch (error) {
             next(error)
