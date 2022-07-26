@@ -3,6 +3,7 @@ import {TYPES} from "../../../dependency-injection/types";
 
 import {DocumentRepository} from "../domain/DocumentRepository";
 import {BadRequestError} from "../../../errors/BadRequestError";
+import {NotFoundError} from "../../../errors/NotFoundError";
 
 @injectable()
 export class DocumentFinder {
@@ -25,6 +26,12 @@ export class DocumentFinder {
     }
 
     async findById(id: string) {
-        return await this.repository.findById(id)
+        const document = await this.repository.findById(id)
+
+        if(!document) {
+            throw new NotFoundError({ message: `ID Document ${id} not found` })
+        }
+
+        return document
     }
 }

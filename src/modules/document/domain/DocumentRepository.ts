@@ -6,4 +6,5 @@ export interface DocumentRepository {
     insert(document: Document): Promise<Document>
     findTitles(search: string, limit: number): Promise<Document[]>
     update(id: string, document: Document): Promise<Document>
+    delete(id: string): Promise<Document>
 }

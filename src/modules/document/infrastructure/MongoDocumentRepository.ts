@@ -158,4 +158,9 @@ export class MongoDocumentRepository extends MongoRepository<Document> implement
         return document
     }
 
+    async delete(id: string): Promise<Document> {
+        this.validateID(id)
+        return (await this.collection.findOneAndDelete({ _id: new ObjectId(id) }, { projection: { history: 0 } })).value
+    }
+
 }

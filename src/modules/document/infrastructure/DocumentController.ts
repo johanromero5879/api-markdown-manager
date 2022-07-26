@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {controller, httpPost, request, response, next, httpGet, httpPatch} from "inversify-express-utils";
+import {controller, httpPost, request, response, next, httpGet, httpPatch, httpDelete} from "inversify-express-utils";
 import {inject} from "inversify";
 import {TYPES} from "../../../dependency-injection/types";
 
@@ -7,12 +7,15 @@ import {DocumentCreator} from "../application/DocumentCreator";
 import {Document} from '../domain/Document'
 import {DocumentFinder} from "../application/DocumentFinder";
 import {DocumentUpdater} from "../application/DocumentUpdater";
+import {ForbiddenError} from "../../../errors/ForbiddenError";
+import {DocumentDeleter} from "../application/DocumentDeleter";
 
 @controller('/documents')
 export class DocumentController {
     @inject(TYPES.DocumentCreator) private documentCreator: DocumentCreator
     @inject(TYPES.DocumentFinder) private documentFinder: DocumentFinder
     @inject(TYPES.DocumentUpdater) private documentUpdater: DocumentUpdater
+    @inject(TYPES.DocumentDeleter) private documentDeleter: DocumentDeleter
 
     @httpPost('/', TYPES.TokenMiddleware)
     async create(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
@@ -79,6 +82,23 @@ export class DocumentController {
             // Emit document created to client sockets
             req.app.get('io').emit('document:updated', document)
 
+            res.json(document)
+        }catch (error) {
+            next(error)
+        }
+    }
+
+    @httpDelete('/:id', TYPES.TokenMiddleware)
+    async delete(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
+        try {
+            const owner = (await this.documentFinder.findById(req.params.id)).created_by
+            const user = req['user']
+
+            if(!(user.role.name === 'administrator' || owner.username === user.username)) {
+                throw new ForbiddenError({ message: `You must be owner document or administrator` })
+            }
+
+            const document = await this.documentDeleter.delete(req.params.id)
             res.json(document)
         }catch (error) {
             next(error)

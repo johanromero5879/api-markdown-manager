@@ -27,6 +27,7 @@ import {AuthToken} from "../modules/auth/application/AuthToken";
 import {DocumentCreator} from "../modules/document/application/DocumentCreator";
 import {DocumentFinder} from "../modules/document/application/DocumentFinder";
 import {DocumentUpdater} from "../modules/document/application/DocumentUpdater";
+import {DocumentDeleter} from "../modules/document/application/DocumentDeleter";
 
 /* Infrastructure */
 import {JWTAdapter} from "../modules/shared/infrastructure/JWTAdapter";
@@ -85,6 +86,7 @@ container.bind<DocumentController>(TYPES.DocumentController).to(DocumentControll
 container.bind<Validator>(TYPES.DocumentValidator).to(DocumentValidator)
 container.bind<DocumentFinder>(TYPES.DocumentFinder).to(DocumentFinder)
 container.bind<DocumentUpdater>(TYPES.DocumentUpdater).to(DocumentUpdater)
+container.bind<DocumentDeleter>(TYPES.DocumentDeleter).to(DocumentDeleter)
 container.bind<Validator>(TYPES.DocumentUpdatedValidator).to(DocumentUpdatedValidator)
 
 export { container }
