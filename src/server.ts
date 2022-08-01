@@ -1,6 +1,5 @@
 import {json} from 'express'
-import { readFileSync } from 'fs'
-import https, { createServer } from 'https'
+import http, { createServer } from 'http'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { Server as SocketServer } from 'socket.io'
@@ -13,17 +12,22 @@ import {allowedOrigins} from './config/allowedOrigins'
 
 export default class Server {
     private server: InversifyExpressServer
-    private readonly httpServer: https.Server
+    private readonly httpServer: http.Server
     private readonly port: string | number
-    private readonly httpCredentials: object
     private readonly io: SocketServer
 
     constructor(port: string | number) {
         this.port = port
         this.server = new InversifyExpressServer(container, null, { rootPath: '/api' })
 
-        // Web sockets
-        this.io = new SocketServer()
+        // Cors options
+        let corsOptions = {}
+        if(process.env.NODE_ENV !== 'production') {
+            corsOptions = {
+                origin: allowedOrigins,
+                credentials: true
+            }
+        }
 
         // Settings middlewares
         this.server.setConfig((app) => {
@@ -31,10 +35,7 @@ export default class Server {
             app.use(json())
             app.use(cookieParser())
 
-            app.use(cors({
-                origin: allowedOrigins,
-                credentials: true
-            }))
+            app.use(cors(corsOptions))
 
             app.use((req, res, next) => {
                 // Prevent XSS
@@ -49,20 +50,14 @@ export default class Server {
             app.use(returnErrorMiddleware)
         })
 
-        // HTTPS Credentials
-        this.httpCredentials = {
-            cert: readFileSync('security/cert.pem'),
-            key: readFileSync('security/key.pem'),
-        }
-
         // Create http server
-        this.httpServer = createServer(this.httpCredentials, this.server.build())
+        this.httpServer = createServer(this.server.build())
+        // Web sockets
+        this.io = new SocketServer(this.httpServer, { cors: corsOptions })
     }
 
     listen() {
         this.httpServer.listen(this.port)
-        this.io.listen(this.httpServer, { cors: { origin: allowedOrigins } })
-
         console.log(`Server is running on port ${ this.port }`)
     }
 

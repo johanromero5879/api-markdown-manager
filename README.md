@@ -11,9 +11,8 @@
 git clone https://github.com/johanromero5879/api-markdown-manager.git
 ```
 2. Locate directory with `cd api-markdown-manager`.
-3. Create a folder `security` and put in `cert.pem` and `key.pem` HTTPS certificates files.
-4. Remove suffix `.sample` of `.env.sample` and set variables.
-6. Install dependencies with `npm install` command.
-7. Execute in:
+3. Remove suffix `.example` of `.env.example` and set variables.
+4. Install dependencies with `npm install` command.
+5. Execute in:
     - Development: `npm run dev`.
     - Production: `npm run build` and `npm start`.

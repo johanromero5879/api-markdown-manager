@@ -9,7 +9,7 @@ export const logError = (error) => {
 }
 
 export const returnErrorMiddleware = (error, req: Request, res: Response, next: NextFunction) => {
-    if(process.env.NODE_ENV === 'development') {
+    if(process.env.NODE_ENV !== 'production') {
         logError(error)
     }
 
