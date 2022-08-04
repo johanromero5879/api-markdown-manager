@@ -49,7 +49,7 @@ export class DocumentController {
     @httpGet('/titles')
     async findByTitles(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
         try {
-            const search = req.query.search+''
+            const search = req.query.search?.toString()
             const limit = parseInt(req.query.limit+'') || 5
 
             const documents = await this.documentFinder.findByTitle(search, limit)

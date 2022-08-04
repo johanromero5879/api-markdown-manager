@@ -76,8 +76,9 @@ export class MongoDocumentRepository extends MongoRepository<Document> implement
     }
 
     async findTitles(search: string, limit: number): Promise<Document[]> {
+        const match = search ? { title: { $regex: `${search}`, $options: 'i' } } : {}
         return await this.collection.aggregate([
-            { $match: { title: { $regex: `${search}`, $options: 'i' } } },
+            { $match: match },
             { $sort: { title: 1 } },
             { $limit: limit },
             { $lookup: {
@@ -87,16 +88,10 @@ export class MongoDocumentRepository extends MongoRepository<Document> implement
                 as: 'created_by'
             } },
             { $unwind: '$created_by' },
-            { $lookup: {
-                    from: 'users',
-                    localField: 'modified_by',
-                    foreignField: '_id',
-                    as: 'modified_by'
-                } },
-            { $unwind: '$modified_by' },
             { $project: {
                 _id: 1,
-                title: 1
+                title: 1,
+                'created_by.fullname': 1
             } }
         ]).toArray() as Document[]
     }

@@ -14,9 +14,6 @@ export class DocumentFinder {
     }
 
     async findByTitle(search: string, limit: number) {
-        if(!search) {
-            throw new BadRequestError({ message: 'Search filter is missing' })
-        }
 
         if(!(limit >= 1 && limit <= 100)) {
             throw new BadRequestError({ message: 'Limit range out of the range 1-100' })
